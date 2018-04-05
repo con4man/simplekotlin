@@ -3,15 +3,104 @@
 println("UW Homework: Simple Kotlin")
 
 // write a "whenFn" that takes an arg of type "Any" and returns a String
+fun whenFn (input : Any) : String {
+    when(input) {
+        "Hello" -> return ("world")
+        "Howdy" -> return ("Say what?")
+        "Bonjour" -> return ("Say what?")
+        0 -> return ("zero")
+        1 -> return ("one")
+        in 2..10 -> return ("low number")
+        !in 0..10 -> return ("I don't understand")
+        else -> {
+            return ("I don't understand")
+        }
+    }
+}
 
 // write an "add" function that takes two Ints, returns an Int, and adds the values
+fun add (firstNumber : Int, secondNumber : Int) : Int {
+    return firstNumber + secondNumber
+}
+
 // write a "sub" function that takes two Ints, returns an Int, and subtracts the values
+fun sub (firstNumber : Int, secondNumber : Int)  : Int {
+    return firstNumber - secondNumber
+}
+
 // write a "mathOp" function that takes two Ints and a function (that takes two Ints and returns an Int), returns an Int, and applies the passed-in-function to the arguments
+fun mathOp (firstNumber : Int, secondNumber : Int, operation : (Int, Int) -> Int): Int {
+     return operation(firstNumber, secondNumber)
+}
 
 // write a class "Person" with first name, last name and age
+class Person(var firstName: String, var lastName: String, var age: Int) {
+    val debugString : String
+        get() = "[Person firstName:$firstName lastName:$lastName age:$age]"
+
+    fun equals(other : Person): Boolean {
+        return other.debugString == debugString
+    }
+
+    override fun hashCode(): Int {
+        return(firstName.hashCode() + lastName.hashCode() + age.hashCode())
+    }
+}
 
 // write a class "Money"
-
+class Money(var amount: Int, var currency: String){
+    
+    operator fun plus(other : Money): Money{
+        if(other.currency != currency){
+            val otherConverted = other.convert(currency)
+            return Money(amount + otherConverted.amount, currency)
+        } else {
+            return Money(amount + other.amount, currency)
+        }
+    }
+    
+    public fun convert(newCurrency: String): Money{
+        var convertedAmount: Int = amount
+        if (currency == "USD") {
+            when(newCurrency){
+                "CAN" -> convertedAmount = amount * 5 / 4
+                "EUR" -> convertedAmount = amount * 3 / 2
+                "GBP" -> convertedAmount = amount / 2
+                "USD" -> convertedAmount = amount
+                else -> throw IllegalArgumentException("Currency not recognized")
+            }
+        } else if (currency == "GBP") {
+            val amountInUSD = amount * 2
+            when(newCurrency){
+                "CAN" -> convertedAmount = amountInUSD * 5 / 4
+                "EUR" -> convertedAmount = amountInUSD * 3 / 2
+                "GBP" -> convertedAmount = amount
+                "USD" -> convertedAmount = amountInUSD 
+                else -> throw IllegalArgumentException("Currency not recognized")
+            }
+        } else if (currency == "EUR") {
+            val amountInUSD = amount * (2/3)
+            when(newCurrency){
+                "CAN" -> convertedAmount = amountInUSD * 5 / 4
+                "EUR" -> convertedAmount = amount
+                "GBP" -> convertedAmount = amountInUSD / 2
+                "USD" -> convertedAmount = amountInUSD
+                else -> throw IllegalArgumentException("Currency not recognized")
+            }
+        } else if (currency == "CAN") {
+            val amountInUSD = amount * (4/5)
+            when(newCurrency){
+                "CAN" -> convertedAmount = amount
+                "EUR" -> convertedAmount = amountInUSD * 3 / 2
+                "GBP" -> convertedAmount = amountInUSD / 2
+                "USD" -> convertedAmount = amountInUSD
+                else -> throw IllegalArgumentException("Currency not recognized")
+            }
+        }
+        var convertedMoney = Money(convertedAmount, newCurrency) 
+        return convertedMoney
+    }
+}
 // ============ DO NOT EDIT BELOW THIS LINE =============
 
 print("When tests: ")
