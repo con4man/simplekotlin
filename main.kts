@@ -49,7 +49,16 @@ class Person(var firstName: String, var lastName: String, var age: Int) {
 
 // write a class "Money"
 class Money(var amount: Int, var currency: String){
-    
+    init {
+        if (amount < 0) {
+            throw IllegalArgumentException("Amount can not be negative")
+        }
+        when (currency) {
+            "USD", "EUR", "CAN","GBP" -> currency = currency
+            else -> throw IllegalArgumentException("Currency is not recognized")
+        }
+    }
+
     operator fun plus(other : Money): Money{
         if(other.currency != currency){
             val otherConverted = other.convert(currency)
@@ -58,7 +67,7 @@ class Money(var amount: Int, var currency: String){
             return Money(amount + other.amount, currency)
         }
     }
-    
+
     public fun convert(newCurrency: String): Money{
         var convertedAmount: Int = amount
         if (currency == "USD") {
